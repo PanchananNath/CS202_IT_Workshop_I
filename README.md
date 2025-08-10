@@ -3,4 +3,5 @@
 # Schedule 
 
 Monday: 2PM - 5PM
-Materials for the Lab course on IT Workshop I (Java Programming Lab) 
+
+Day wise materials for the Lab will be pushed here  
