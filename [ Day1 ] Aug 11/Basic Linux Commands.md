@@ -64,10 +64,6 @@ This guide provides a categorized overview of common Linux commands with concise
 
 
 ## 4. Process Management
-| Command | Usage |
-|---------|-------|
-| **ps** | Lists running processes. Example: `ps aux`. |
-| **kill** | Terminates processes by PID. Example: `kill 1234`. |
 
 | Command   | Description                          | Usage Examples                                  |
 |-----------|--------------------------------------|------------------------------------------------|
