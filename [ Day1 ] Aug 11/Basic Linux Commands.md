@@ -56,3 +56,10 @@ This guide provides a categorized overview of common Linux commands with concise
 | **locate** | Quickly finds files (needs `updatedb`). |
 | **mount** | Mounts devices/filesystems. |
 | **umount** | Unmounts devices/filesystems. |
+
+
+## 4. Process Management
+| Command | Usage |
+|---------|-------|
+| **ps** | Lists running processes. Example: `ps aux`. |
+| **kill** | Terminates processes by PID. Example: `kill 1234`. |
