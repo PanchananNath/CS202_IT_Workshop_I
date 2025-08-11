@@ -63,3 +63,13 @@ This guide provides a categorized overview of common Linux commands with concise
 |---------|-------|
 | **ps** | Lists running processes. Example: `ps aux`. |
 | **kill** | Terminates processes by PID. Example: `kill 1234`. |
+
+
+## 5. Editors
+| Command | Usage |
+|---------|-------|
+| **vi** | Modal text editor. |
+| **gedit** | GUI text editor (GNOME). |
+| **joe** | Simple terminal text editor. |
+| **mcedit** | Editor from Midnight Commander. |
+| **emacs** | Powerful text editor/IDE. |
