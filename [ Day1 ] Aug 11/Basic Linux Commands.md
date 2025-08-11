@@ -35,3 +35,24 @@ This guide provides a categorized overview of common Linux commands with concise
 | **cmp** | Compares two files byte-by-byte. |
 | **comm** | Compares two sorted files line-by-line. |
 | **diff** | Shows differences between two files. |
+
+
+## 3. File System Management
+| Command | Usage |
+|---------|-------|
+| **mkdir** | Creates a directory. |
+| **rmdir** | Removes an empty directory. |
+| **ls** | Lists directory contents. |
+| **ls -a** | Lists all files including hidden. |
+| **ls -l** | Long format listing. |
+| **ln** | Creates file links. Example: `ln -s file1 link1`. |
+| **cp** | Copies files/directories. |
+| **rm** | Deletes files/directories. |
+| **mv** | Moves/renames files. |
+| **file** | Displays file type. |
+| **chmod** | Changes file permissions. |
+| **chown** | Changes file owner/group. |
+| **find** | Searches for files. Example: `find / -name "file.txt"`. |
+| **locate** | Quickly finds files (needs `updatedb`). |
+| **mount** | Mounts devices/filesystems. |
+| **umount** | Unmounts devices/filesystems. |
