@@ -73,14 +73,6 @@ This guide provides a categorized overview of common Linux commands with concise
 
 
 ## 5. Editors
-| Command | Usage |
-|---------|-------|
-| **vi** | Modal text editor. |
-| **gedit** | GUI text editor (GNOME). |
-| **joe** | Simple terminal text editor. |
-| **mcedit** | Editor from Midnight Commander. |
-| **emacs** | Powerful text editor/IDE. |
-
 
 | Command   | Description                          | Usage Examples                                  |
 |-----------|--------------------------------------|------------------------------------------------|
