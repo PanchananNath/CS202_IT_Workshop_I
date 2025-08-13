@@ -10,5 +10,5 @@ Wednesday: 2PM - 5PM for G21 & G23
 
 # Venue 
 
-Lab 3 
+Lab 5
  
