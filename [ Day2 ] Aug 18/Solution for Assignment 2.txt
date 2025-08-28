@@ -1,3 +1,6 @@
+Solution for Q 1:: 
+
+
 import java.util.Scanner;
 
 public class ArrayOperations {
@@ -261,4 +264,5 @@ public class PriorityQueueArray {
         System.out.println("Extracted: " + extracted);
         pq.printQueue();
     }
+
 }
