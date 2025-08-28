@@ -1,0 +1,264 @@
+import java.util.Scanner;
+
+public class ArrayOperations {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the size of the array: ");
+        int size = scanner.nextInt();
+        int[] arr = new int[size];
+        System.out.println("Enter the elements of the array:");
+        for (int i = 0; i < size; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        int choice;
+        do {
+            System.out.println("\n--- Menu ---");
+            System.out.println("A. Find the sum of all elements");
+            System.out.println("B. Find the maximum element");
+            System.out.println("C. Search for a given element");
+            System.out.println("D. Exit");
+            System.out.print("Enter your choice: ");
+            String option = scanner.next().toUpperCase();
+
+            switch (option) {
+                case "A":
+                    int sum = findSum(arr);
+                    System.out.println("The sum of all elements is: " + sum);
+                    break;
+                case "B":
+                    int max = findMax(arr);
+                    System.out.println("The maximum element is: " + max);
+                    break;
+                case "C":
+                    System.out.print("Enter the element to search for: ");
+                    int element = scanner.nextInt();
+                    searchElement(arr, element);
+                    break;
+                case "D":
+                    System.out.println("Exiting program.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (!scanner.next().equalsIgnoreCase("D"));
+
+        scanner.close();
+    }
+
+    /**
+     * Finds the sum of all elements in an integer array.
+     * @param arr The input array.
+     * @return The sum of the elements.
+     */
+    public static int findSum(int[] arr) {
+        int sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+        return sum;
+    }
+
+    /**
+     * Finds the maximum element in an integer array.
+     * @param arr The input array.
+     * @return The maximum element.
+     */
+    public static int findMax(int[] arr) {
+        if (arr.length == 0) {
+            System.out.println("Array is empty.");
+            return Integer.MIN_VALUE;
+        }
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
+        return max;
+    }
+
+    /**
+     * Searches for a given element in an integer array.
+     * @param arr The input array.
+     * @param element The element to search for.
+     */
+    public static void searchElement(int[] arr, int element) {
+        boolean found = false;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == element) {
+                System.out.println("Element " + element + " found at index " + i + ".");
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Element " + element + " not found in the array.");
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.Stack;
+
+public class NearestGreaterElement {
+
+    public static void main(String[] args) {
+        int[] arr = {4, 5, 2, 25, 7, 8};
+        int[] result = findNearestGreater(arr);
+        
+        System.out.print("Input: {");
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + (i < arr.length - 1 ? ", " : ""));
+        }
+        System.out.println("}");
+
+        System.out.print("Output: ");
+        for (int i = 0; i < result.length; i++) {
+            System.out.print(result[i] + " ");
+        }
+    }
+
+    /**
+     * Finds the nearest greater element to the right for each element in an array.
+     * @param arr The input array.
+     * @return An array containing the nearest greater element for each element.
+     */
+    public static int[] findNearestGreater(int[] arr) {
+        int n = arr.length;
+        int[] result = new int[n];
+        // The hint suggests using an additional array as a stack. The Stack class from java.util is an easy way to achieve this.
+        Stack<Integer> stack = new Stack<>();
+
+        // Start from the end of the array and move backward
+        for (int i = n - 1; i >= 0; i--) {
+            // While the stack is not empty and the top element is less than or equal to the current element
+            while (!stack.isEmpty() && stack.peek() <= arr[i]) {
+                // Pop elements from the stack
+                stack.pop();
+            }
+            
+            // If the stack becomes empty, there is no greater element to the right
+            if (stack.isEmpty()) {
+                result[i] = -1;
+            } else {
+                // The top of the stack is the nearest greater element
+                result[i] = stack.peek();
+            }
+            
+            // Push the current element onto the stack
+            stack.push(arr[i]);
+        }
+        return result;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.Arrays;
+
+public class PriorityQueueArray {
+
+    private int[] queue;
+    private int size;
+
+    public PriorityQueueArray(int capacity) {
+        queue = new int[capacity];
+        size = 0;
+    }
+
+    /**
+     * Inserts a new data item into the priority queue.
+     * This operation has a time complexity of O(n) as it maintains a sorted array.
+     * @param item The integer value to insert.
+     */
+    public void insert(int item) {
+        if (size == queue.length) {
+            System.out.println("Queue is full, cannot insert.");
+            return;
+        }
+
+        int i;
+        // Find the correct position to insert the new item to maintain ascending order
+        for (i = size - 1; i >= 0 && queue[i] > item; i--) {
+            queue[i + 1] = queue[i];
+        }
+        queue[i + 1] = item;
+        size++;
+    }
+
+    /**
+     * Extracts and removes the data item with the highest priority (lowest value).
+     * This operation has a time complexity of O(1).
+     * @return The highest priority item.
+     */
+    public int extract() {
+        if (size == 0) {
+            System.out.println("Queue is empty, cannot extract.");
+            return -1;
+        }
+        
+        int highestPriorityItem = queue[0];
+        // Shift all elements to the left to remove the first element
+        for (int i = 0; i < size - 1; i++) {
+            queue[i] = queue[i + 1];
+        }
+        size--;
+        return highestPriorityItem;
+    }
+
+    public void printQueue() {
+        System.out.print("Priority Queue: {");
+        for (int i = 0; i < size; i++) {
+            System.out.print(queue[i] + (i < size - 1 ? ", " : ""));
+        }
+        System.out.println("}");
+    }
+
+    public static void main(String[] args) {
+        PriorityQueueArray pq = new PriorityQueueArray(10);
+        int[] testCase = {10, 7, 2, 5, 3, 18, 4, 12, 9};
+        System.out.println("Inserting elements: " + Arrays.toString(testCase));
+        for (int item : testCase) {
+            pq.insert(item);
+        }
+        pq.printQueue();
+        
+        System.out.println("\nExtracting highest priority item...");
+        int extracted = pq.extract();
+        System.out.println("Extracted: " + extracted);
+        pq.printQueue();
+    }
+}
