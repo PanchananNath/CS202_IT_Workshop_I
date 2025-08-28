@@ -165,7 +165,7 @@ public class NearestGreaterElement {
 
 
 
-Solution for Q3::
+# Solution for Q3::
 
 
 import java.util.Arrays;
@@ -244,6 +244,7 @@ public class PriorityQueueArray {
     }
 
 }
+
 
 
 
