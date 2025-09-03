@@ -15,4 +15,8 @@ Lab 5
 # Tutor for G24
 
 Dr. Arijit Nath
+
+# TAs for G24
+
+
  
