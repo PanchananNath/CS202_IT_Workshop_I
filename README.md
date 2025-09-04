@@ -4,7 +4,7 @@ Day wise materials for the Lab will be pushed here
 
 # Schedule 
 
-Monday: 2PM - 5PM for G22 & G24
+Monday: 2PM - 5PM for G24
 
 # Venue 
 
