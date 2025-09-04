@@ -18,9 +18,9 @@ Dr. Arijit Nath
 
 # TAs for G24
 
-Gargi handique 
+Gargee Handique 
 
-Panchanan Nath 
+Er. Panchanan Nath 
 
 
  
