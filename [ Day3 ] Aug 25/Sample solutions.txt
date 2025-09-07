@@ -54,5 +54,195 @@ public class OddEvenCounter {
 Q2. Solution
 
 
+import java.util.Scanner;
+
+class Book {
+    int bookId;
+    String bookTitle;
+    int yearOfPublication;
+    String authorName;
+    String publisherName;
+    int availableCopies;
+    int totalCopies;
+
+    // Default constructor
+    Book() {
+        this.bookId = 0;
+        this.bookTitle = "";
+        this.yearOfPublication = 0;
+        this.authorName = "";
+        this.publisherName = "";
+        this.availableCopies = 0;
+        this.totalCopies = 0;
+    }
+
+    // Constructor with total copies
+    Book(int totalCopies) {
+        this.totalCopies = totalCopies;
+        this.availableCopies = totalCopies;
+    }
+
+    // Method to set details
+    void setDetails(int id, String title, int year, String author, String publisher, int count) {
+        this.bookId = id;
+        this.bookTitle = title;
+        this.yearOfPublication = year;
+        this.authorName = author;
+        this.publisherName = publisher;
+        this.totalCopies = count;
+        this.availableCopies = count;
+    }
+
+    // Display details
+    void getDetails(int id) {
+        if (this.bookId == id) {
+            System.out.println("\n=== Book Details ===");
+            System.out.println("Book ID: " + bookId);
+            System.out.println("Title: " + bookTitle);
+            System.out.println("Year of Publication: " + yearOfPublication);
+            System.out.println("Author: " + authorName);
+            System.out.println("Publisher: " + publisherName);
+            System.out.println("Available Copies: " + availableCopies + "/" + totalCopies);
+        }
+    }
+
+    // Issue a book
+    void issue(int id) {
+        if (this.bookId == id) {
+            if (availableCopies > 0) {
+                availableCopies--;
+                System.out.println("Book issued successfully. Remaining copies: " + availableCopies);
+            } else {
+                System.out.println("No copies available for Book ID: " + id);
+            }
+        }
+    }
+
+    // Return a book
+    void returnBook(int id) {
+        if (this.bookId == id) {
+            if (availableCopies < totalCopies) {
+                availableCopies++;
+                System.out.println("Book returned successfully. Available copies: " + availableCopies);
+            } else {
+                System.out.println("Cannot return. All " + totalCopies + " copies are already in the library.");
+            }
+        }
+    }
+}
+
+public class LibraryManagementSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Create an array of 5 books
+        Book[] bookArray = new Book[5];
+        for (int i = 0; i < 5; i++) {
+            bookArray[i] = new Book();
+        }
+
+        int choice;
+        do {
+            System.out.println("\n===== Library Menu =====");
+            System.out.println("1. Set Book Details");
+            System.out.println("2. Get Book Details");
+            System.out.println("3. Issue a Book");
+            System.out.println("4. Return a Book");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1: // Set Details
+                    System.out.print("Enter Book ID: ");
+                    int id = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter Title: ");
+                    String title = sc.nextLine();
+                    System.out.print("Enter Year of Publication: ");
+                    int year = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter Author: ");
+                    String author = sc.nextLine();
+                    System.out.print("Enter Publisher: ");
+                    String publisher = sc.nextLine();
+                    System.out.print("Enter Total Copies: ");
+                    int count = sc.nextInt();
+
+                    boolean setFlag = false;
+                    for (int i = 0; i < 5; i++) {
+                        if (bookArray[i].bookId == 0) { // Empty slot
+                            bookArray[i].setDetails(id, title, year, author, publisher, count);
+                            System.out.println("Book details set successfully.");
+                            setFlag = true;
+                            break;
+                        }
+                    }
+                    if (!setFlag) {
+                        System.out.println("No space left to add more books.");
+                    }
+                    break;
+
+                case 2: // Get Details
+                    System.out.print("Enter Book ID: ");
+                    int getId = sc.nextInt();
+                    boolean found = false;
+                    for (Book b : bookArray) {
+                        if (b.bookId == getId) {
+                            b.getDetails(getId);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("Book ID not found.");
+                    }
+                    break;
+
+                case 3: // Issue
+                    System.out.print("Enter Book ID to issue: ");
+                    int issueId = sc.nextInt();
+                    found = false;
+                    for (Book b : bookArray) {
+                        if (b.bookId == issueId) {
+                            b.issue(issueId);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("Book ID not found.");
+                    }
+                    break;
+
+                case 4: // Return
+                    System.out.print("Enter Book ID to return: ");
+                    int returnId = sc.nextInt();
+                    found = false;
+                    for (Book b : bookArray) {
+                        if (b.bookId == returnId) {
+                            b.returnBook(returnId);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("Book ID not found.");
+                    }
+                    break;
+
+                case 5: // Exit
+                    System.out.println("Exiting Library System. Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Please enter 1-5.");
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
 
 
