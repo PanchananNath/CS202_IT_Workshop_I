@@ -1,0 +1,52 @@
+Q1. Solution 
+
+
+import java.util.Scanner;
+
+public class OddEvenCounter {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Step 1: Read number of test cases
+        System.out.print("Enter number of test cases (n): ");
+        int n = sc.nextInt();
+
+        // Step 2: Read the size of each test case
+        int[] sizes = new int[n];
+        System.out.println("Enter the size of each test case:");
+        for (int i = 0; i < n; i++) {
+            sizes[i] = sc.nextInt();
+        }
+
+        // Step 3: Read the values for each test case
+        int[][] testCases = new int[n][];
+        for (int i = 0; i < n; i++) {
+            testCases[i] = new int[sizes[i]];
+            System.out.println("Enter " + sizes[i] + " numbers for Test Case " + (i + 1) + ":");
+            for (int j = 0; j < sizes[i]; j++) {
+                testCases[i][j] = sc.nextInt();
+            }
+        }
+
+        // Step 4: Process each test case
+        int overallOdd = 0, overallEven = 0;
+        for (int i = 0; i < n; i++) {
+            int odd = 0, even = 0;
+            for (int num : testCases[i]) {
+                if (num % 2 == 0) {
+                    even++;
+                    overallEven++;
+                } else {
+                    odd++;
+                    overallOdd++;
+                }
+            }
+            System.out.println("Test Case " + (i + 1) + ": Odd = " + odd + ", Even = " + even);
+        }
+
+        // Step 5: Print overall totals
+        System.out.println("Overall Count: Odd = " + overallOdd + ", Even = " + overallEven);
+
+        sc.close();
+    }
+}
