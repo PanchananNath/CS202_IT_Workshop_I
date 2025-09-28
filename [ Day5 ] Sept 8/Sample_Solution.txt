@@ -1,1 +1,234 @@
 
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Account {
+    private int accountNumber;
+    private String accountType;
+    private String serviceBranchIFSC;
+    private float minimumBalance;
+    private float availableBalance;
+    private int customerID;
+    private String customerName;
+    private static int totalAccountCreated = 0;
+
+    // Constructor
+    public Account() {
+        totalAccountCreated++;
+    }
+
+    // Method to set account details
+    public void setDetails(Scanner sc) {
+        try {
+            System.out.print("Enter Account Number: ");
+            accountNumber = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            System.out.print("Enter Customer Name: ");
+            customerName = sc.nextLine();
+
+            System.out.print("Enter Account Type (Savings/Current): ");
+            accountType = sc.nextLine();
+
+            System.out.print("Enter Service Branch IFSC: ");
+            serviceBranchIFSC = sc.nextLine();
+
+            System.out.print("Enter Customer ID: ");
+            customerID = sc.nextInt();
+
+            System.out.print("Enter Minimum Balance: ");
+            minimumBalance = sc.nextFloat();
+
+            System.out.print("Enter Available Balance: ");
+            availableBalance = sc.nextFloat();
+
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input type! Please try again.");
+            sc.nextLine(); // clear buffer
+        } catch (Exception e) {
+            System.out.println("Error while setting details: " + e.getMessage());
+        }
+    }
+
+    public String getDetails(int accNo) {
+        if (this.accountNumber == accNo) {
+            return "Account No: " + accountNumber + ", Name: " + customerName +
+                   ", Type: " + accountType + ", Balance: " + availableBalance;
+        }
+        return "Account not found!";
+    }
+
+    public void updateDetails(int accNo, Scanner sc) {
+        if (this.accountNumber != accNo) return;
+
+        try {
+            System.out.println("Choose detail to update:\n1. Minimum Balance\n2. Customer Name\n3. Customer ID");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter new Minimum Balance: ");
+                    minimumBalance = sc.nextFloat();
+                    break;
+                case 2:
+                    System.out.print("Enter new Customer Name: ");
+                    customerName = sc.nextLine();
+                    break;
+                case 3:
+                    System.out.print("Enter new Customer ID: ");
+                    customerID = sc.nextInt();
+                    break;
+                default:
+                    System.out.println("Invalid option!");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input type!");
+            sc.nextLine();
+        }
+    }
+
+    public float getBalance(int accNo) {
+        if (this.accountNumber == accNo) {
+            return availableBalance;
+        }
+        return -1;
+    }
+
+    public void deposit(int accNo, float amount) {
+        try {
+            if (this.accountNumber == accNo) {
+                if (amount <= 0) throw new IllegalArgumentException("Deposit amount must be positive.");
+                availableBalance += amount;
+                System.out.println("Deposited " + amount + " successfully.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void withdraw(int accNo, float amount) {
+        try {
+            if (this.accountNumber == accNo) {
+                if (amount <= 0) throw new IllegalArgumentException("Withdrawal amount must be positive.");
+                if (availableBalance - amount < minimumBalance)
+                    throw new ArithmeticException("Insufficient balance after maintaining minimum balance.");
+                availableBalance -= amount;
+                System.out.println("Withdrawal of " + amount + " successful.");
+            }
+        } catch (ArithmeticException | IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    public static int totalAccount() {
+        return totalAccountCreated;
+    }
+
+    public static void compare(Account a1, Account a2) {
+        try {
+            if (a1.availableBalance > a2.availableBalance) {
+                System.out.println("Account with higher balance: " + a1.getDetails(a1.accountNumber));
+            } else if (a2.availableBalance > a1.availableBalance) {
+                System.out.println("Account with higher balance: " + a2.getDetails(a2.accountNumber));
+            } else {
+                System.out.println("Both accounts have equal balance.");
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Error: One of the accounts is not initialized.");
+        }
+    }
+
+    // === MAIN METHOD ===
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Array of accounts
+        Account[] accounts = new Account[5];
+        int count = 0;
+
+        while (true) {
+            try {
+                System.out.println("\n--- Banking System Menu ---");
+                System.out.println("1. Create Account");
+                System.out.println("2. Update Details");
+                System.out.println("3. Get Details");
+                System.out.println("4. Deposit");
+                System.out.println("5. Withdraw");
+                System.out.println("6. Total Accounts");
+                System.out.println("7. Compare Two Accounts");
+                System.out.println("8. Exit");
+                System.out.print("Enter your choice: ");
+                int choice = sc.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        if (count < accounts.length) {
+                            accounts[count] = new Account();
+                            accounts[count].setDetails(sc);
+                            count++;
+                        } else {
+                            System.out.println("Account limit reached!");
+                        }
+                        break;
+                    case 2:
+                        System.out.print("Enter Account No to update: ");
+                        int uNo = sc.nextInt();
+                        for (Account acc : accounts) {
+                            if (acc != null) acc.updateDetails(uNo, sc);
+                        }
+                        break;
+                    case 3:
+                        System.out.print("Enter Account No to fetch details: ");
+                        int gNo = sc.nextInt();
+                        for (Account acc : accounts) {
+                            if (acc != null) System.out.println(acc.getDetails(gNo));
+                        }
+                        break;
+                    case 4:
+                        System.out.print("Enter Account No: ");
+                        int dNo = sc.nextInt();
+                        System.out.print("Enter amount to deposit: ");
+                        float damt = sc.nextFloat();
+                        for (Account acc : accounts) {
+                            if (acc != null) acc.deposit(dNo, damt);
+                        }
+                        break;
+                    case 5:
+                        System.out.print("Enter Account No: ");
+                        int wNo = sc.nextInt();
+                        System.out.print("Enter amount to withdraw: ");
+                        float wamt = sc.nextFloat();
+                        for (Account acc : accounts) {
+                            if (acc != null) acc.withdraw(wNo, wamt);
+                        }
+                        break;
+                    case 6:
+                        System.out.println("Total Accounts Created: " + Account.totalAccount());
+                        break;
+                    case 7:
+                        System.out.print("Enter first Account index (0-" + (count-1) + "): ");
+                        int i1 = sc.nextInt();
+                        System.out.print("Enter second Account index (0-" + (count-1) + "): ");
+                        int i2 = sc.nextInt();
+                        Account.compare(accounts[i1], accounts[i2]);
+                        break;
+                    case 8:
+                        System.out.println("Exiting...");
+                        sc.close();
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Invalid choice! Try again.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input type! Enter numbers only.");
+                sc.nextLine(); // clear buffer
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Invalid account index entered.");
+            } catch (Exception e) {
+                System.out.println("Unexpected error: " + e.getMessage());
+            }
+        }
+    }
+}
