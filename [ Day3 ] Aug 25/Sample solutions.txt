@@ -3,139 +3,137 @@ Q1. Solution
 
 import java.util.Scanner;
 
-public class OddEvenCounter {
+public class evenodd {
+
+    public static int[] evenoddCounter(int[] arr) {
+        int odd = 0, even = 0;
+        for (int num : arr) {
+            if (num % 2 == 0)
+                even++;
+            else
+                odd++;
+        }
+        return new int[]{odd, even};
+    }
+
+    public static void print(int testCaseNum, int odd, int even) {
+        System.out.println("Testcase: " + testCaseNum + " Odd: " + odd + " Even: " + even);
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Step 1: Read number of test cases
-        System.out.print("Enter number of test cases (n): ");
+        System.out.println("Enter the number of testcases(n):");
         int n = sc.nextInt();
 
-        // Step 2: Read the size of each test case
-        int[] sizes = new int[n];
-        System.out.println("Enter the size of each test case:");
+        int[] size = new int[n];
+        System.out.println("Enter the size of each testcase:");
         for (int i = 0; i < n; i++) {
-            sizes[i] = sc.nextInt();
+            System.out.println("Size of test case " + (i + 1) + ":");
+            size[i] = sc.nextInt();
         }
 
-        // Step 3: Read the values for each test case
-        int[][] testCases = new int[n][];
-        for (int i = 0; i < n; i++) {
-            testCases[i] = new int[sizes[i]];
-            System.out.println("Enter " + sizes[i] + " numbers for Test Case " + (i + 1) + ":");
-            for (int j = 0; j < sizes[i]; j++) {
-                testCases[i][j] = sc.nextInt();
+        int totalOdd = 0, totalEven = 0;
+
+        for (int j = 0; j < n; j++) {
+            int[] arr = new int[size[j]];
+            System.out.println("Enter the " + size[j] + " values for testcase " + (j + 1) + ":");
+            for (int t = 0; t < size[j]; t++) {
+                arr[t] = sc.nextInt();
             }
+
+            int[] result = evenoddCounter(arr);
+            int odd = result[0], even = result[1];
+
+            totalOdd += odd;
+            totalEven += even;
+
+            print(j + 1, odd, even);
         }
 
-        // Step 4: Process each test case
-        int overallOdd = 0, overallEven = 0;
-        for (int i = 0; i < n; i++) {
-            int odd = 0, even = 0;
-            for (int num : testCases[i]) {
-                if (num % 2 == 0) {
-                    even++;
-                    overallEven++;
-                } else {
-                    odd++;
-                    overallOdd++;
-                }
-            }
-            System.out.println("Test Case " + (i + 1) + ": Odd = " + odd + ", Even = " + even);
-        }
-
-        // Step 5: Print overall totals
-        System.out.println("Overall Count: Odd = " + overallOdd + ", Even = " + overallEven);
-
-        sc.close();
+        System.out.println("Overall: Odd = " + totalOdd + " Even = " + totalEven);
     }
 }
+
+
 
 Q2. Solution
 
 
+
 import java.util.Scanner;
-
 class Book {
-    int bookId;
-    String bookTitle;
-    int yearOfPublication;
-    String authorName;
-    String publisherName;
-    int availableCopies;
-    int totalCopies;
+    private int bookId;
+    private String bookTitle;
+    private int yearOfPublication;
+    private String authorName;
+    private String publisherName;
+    private int numberOfAvailableCopies;
+    private int totalCopies;
 
-    // Default constructor
-    Book() {
-        this.bookId = 0;
-        this.bookTitle = "";
-        this.yearOfPublication = 0;
-        this.authorName = "";
-        this.publisherName = "";
-        this.availableCopies = 0;
+    public Book() {
         this.totalCopies = 0;
+        this.numberOfAvailableCopies = 0;
     }
 
-    // Constructor with total copies
-    Book(int totalCopies) {
+    public Book(int totalCopies) {
         this.totalCopies = totalCopies;
-        this.availableCopies = totalCopies;
+        this.numberOfAvailableCopies = totalCopies;
     }
 
-    // Method to set details
-    void setDetails(int id, String title, int year, String author, String publisher, int count) {
+    public void setDetails(int id, String title, int year, String author, String publisher, int count) {
         this.bookId = id;
         this.bookTitle = title;
         this.yearOfPublication = year;
         this.authorName = author;
         this.publisherName = publisher;
         this.totalCopies = count;
-        this.availableCopies = count;
+        this.numberOfAvailableCopies = count;
     }
 
-    // Display details
-    void getDetails(int id) {
+    public void getDetails(int id) {
         if (this.bookId == id) {
-            System.out.println("\n=== Book Details ===");
             System.out.println("Book ID: " + bookId);
             System.out.println("Title: " + bookTitle);
             System.out.println("Year of Publication: " + yearOfPublication);
             System.out.println("Author: " + authorName);
             System.out.println("Publisher: " + publisherName);
-            System.out.println("Available Copies: " + availableCopies + "/" + totalCopies);
+            System.out.println("Available Copies: " + numberOfAvailableCopies);
+            System.out.println("Total Copies: " + totalCopies);
         }
     }
 
-    // Issue a book
-    void issue(int id) {
+    public void issue(int id) {
         if (this.bookId == id) {
-            if (availableCopies > 0) {
-                availableCopies--;
-                System.out.println("Book issued successfully. Remaining copies: " + availableCopies);
+            if (numberOfAvailableCopies > 0) {
+                numberOfAvailableCopies--;
+                System.out.println("Book issued successfully!");
             } else {
-                System.out.println("No copies available for Book ID: " + id);
+                System.out.println("No copies available to issue.");
             }
         }
     }
 
-    // Return a book
-    void returnBook(int id) {
+    public void returnBook(int id) {
         if (this.bookId == id) {
-            if (availableCopies < totalCopies) {
-                availableCopies++;
-                System.out.println("Book returned successfully. Available copies: " + availableCopies);
+            if (numberOfAvailableCopies < totalCopies) {
+                numberOfAvailableCopies++;
+                System.out.println("Book returned successfully!");
             } else {
-                System.out.println("Cannot return. All " + totalCopies + " copies are already in the library.");
+                System.out.println("All copies are already in the library.");
             }
         }
+    }
+
+    public int getBookId() {
+        return bookId;
     }
 }
 
-public class LibraryManagementSystem {
+public class LibrarySystem {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Create an array of 5 books
         Book[] bookArray = new Book[5];
         for (int i = 0; i < 5; i++) {
             bookArray[i] = new Book();
@@ -143,17 +141,17 @@ public class LibraryManagementSystem {
 
         int choice;
         do {
-            System.out.println("\n===== Library Menu =====");
+            System.out.println("\n----- Library Menu -----");
             System.out.println("1. Set Book Details");
             System.out.println("2. Get Book Details");
-            System.out.println("3. Issue a Book");
-            System.out.println("4. Return a Book");
+            System.out.println("3. Issue Book");
+            System.out.println("4. Return Book");
             System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
             choice = sc.nextInt();
 
             switch (choice) {
-                case 1: // Set Details
+                case 1: 
                     System.out.print("Enter Book ID: ");
                     int id = sc.nextInt();
                     sc.nextLine();
@@ -166,83 +164,60 @@ public class LibraryManagementSystem {
                     String author = sc.nextLine();
                     System.out.print("Enter Publisher: ");
                     String publisher = sc.nextLine();
-                    System.out.print("Enter Total Copies: ");
+                    System.out.print("Enter Number of Copies: ");
                     int count = sc.nextInt();
 
-                    boolean setFlag = false;
-                    for (int i = 0; i < 5; i++) {
-                        if (bookArray[i].bookId == 0) { // Empty slot
+                    boolean assigned = false;
+                    for (int i = 0; i < bookArray.length; i++) {
+                        if (bookArray[i].getBookId() == 0) { 
                             bookArray[i].setDetails(id, title, year, author, publisher, count);
-                            System.out.println("Book details set successfully.");
-                            setFlag = true;
+                            System.out.println("Book details added successfully!");
+                            assigned = true;
                             break;
                         }
                     }
-                    if (!setFlag) {
-                        System.out.println("No space left to add more books.");
+                    if (!assigned) {
+                        System.out.println("Book array is full, cannot add more books.");
                     }
                     break;
 
-                case 2: // Get Details
+                case 2: 
                     System.out.print("Enter Book ID: ");
-                    int getId = sc.nextInt();
-                    boolean found = false;
+                    int searchId = sc.nextInt();
                     for (Book b : bookArray) {
-                        if (b.bookId == getId) {
-                            b.getDetails(getId);
-                            found = true;
-                            break;
+                        if (b.getBookId() == searchId) {
+                            b.getDetails(searchId);
                         }
-                    }
-                    if (!found) {
-                        System.out.println("Book ID not found.");
                     }
                     break;
 
-                case 3: // Issue
-                    System.out.print("Enter Book ID to issue: ");
+                case 3: 
+                    System.out.print("Enter Book ID: ");
                     int issueId = sc.nextInt();
-                    found = false;
                     for (Book b : bookArray) {
-                        if (b.bookId == issueId) {
+                        if (b.getBookId() == issueId) {
                             b.issue(issueId);
-                            found = true;
-                            break;
                         }
-                    }
-                    if (!found) {
-                        System.out.println("Book ID not found.");
                     }
                     break;
 
-                case 4: // Return
-                    System.out.print("Enter Book ID to return: ");
+                case 4:
+                    System.out.print("Enter Book ID: ");
                     int returnId = sc.nextInt();
-                    found = false;
                     for (Book b : bookArray) {
-                        if (b.bookId == returnId) {
+                        if (b.getBookId() == returnId) {
                             b.returnBook(returnId);
-                            found = true;
-                            break;
                         }
-                    }
-                    if (!found) {
-                        System.out.println("Book ID not found.");
                     }
                     break;
 
-                case 5: // Exit
-                    System.out.println("Exiting Library System. Goodbye!");
+                case 5:
+                    System.out.println("Exiting... Thank you!");
                     break;
 
                 default:
-                    System.out.println("Invalid choice! Please enter 1-5.");
+                    System.out.println("Invalid choice! Try again.");
             }
-
         } while (choice != 5);
-
-        sc.close();
     }
 }
-
-
