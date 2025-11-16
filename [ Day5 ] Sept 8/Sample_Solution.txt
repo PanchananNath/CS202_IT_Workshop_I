@@ -1,234 +1,209 @@
-
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Account {
-    private int accountNumber;
-    private String accountType;
-    private String serviceBranchIFSC;
-    private float minimumBalance;
-    private float availableBalance;
-    private int customerID;
-    private String customerName;
-    private static int totalAccountCreated = 0;
+class Faculty {
+    String name;
 
-    // Constructor
-    public Account() {
-        totalAccountCreated++;
+    public Faculty(String name) {
+        this.name = name;
     }
 
-    // Method to set account details
-    public void setDetails(Scanner sc) {
-        try {
-            System.out.print("Enter Account Number: ");
-            accountNumber = sc.nextInt();
-            sc.nextLine(); // consume newline
-
-            System.out.print("Enter Customer Name: ");
-            customerName = sc.nextLine();
-
-            System.out.print("Enter Account Type (Savings/Current): ");
-            accountType = sc.nextLine();
-
-            System.out.print("Enter Service Branch IFSC: ");
-            serviceBranchIFSC = sc.nextLine();
-
-            System.out.print("Enter Customer ID: ");
-            customerID = sc.nextInt();
-
-            System.out.print("Enter Minimum Balance: ");
-            minimumBalance = sc.nextFloat();
-
-            System.out.print("Enter Available Balance: ");
-            availableBalance = sc.nextFloat();
-
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input type! Please try again.");
-            sc.nextLine(); // clear buffer
-        } catch (Exception e) {
-            System.out.println("Error while setting details: " + e.getMessage());
-        }
-    }
-
-    public String getDetails(int accNo) {
-        if (this.accountNumber == accNo) {
-            return "Account No: " + accountNumber + ", Name: " + customerName +
-                   ", Type: " + accountType + ", Balance: " + availableBalance;
-        }
-        return "Account not found!";
-    }
-
-    public void updateDetails(int accNo, Scanner sc) {
-        if (this.accountNumber != accNo) return;
-
-        try {
-            System.out.println("Choose detail to update:\n1. Minimum Balance\n2. Customer Name\n3. Customer ID");
-            int choice = sc.nextInt();
-            sc.nextLine();
-
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter new Minimum Balance: ");
-                    minimumBalance = sc.nextFloat();
-                    break;
-                case 2:
-                    System.out.print("Enter new Customer Name: ");
-                    customerName = sc.nextLine();
-                    break;
-                case 3:
-                    System.out.print("Enter new Customer ID: ");
-                    customerID = sc.nextInt();
-                    break;
-                default:
-                    System.out.println("Invalid option!");
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input type!");
-            sc.nextLine();
-        }
-    }
-
-    public float getBalance(int accNo) {
-        if (this.accountNumber == accNo) {
-            return availableBalance;
-        }
-        return -1;
-    }
-
-    public void deposit(int accNo, float amount) {
-        try {
-            if (this.accountNumber == accNo) {
-                if (amount <= 0) throw new IllegalArgumentException("Deposit amount must be positive.");
-                availableBalance += amount;
-                System.out.println("Deposited " + amount + " successfully.");
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    public void withdraw(int accNo, float amount) {
-        try {
-            if (this.accountNumber == accNo) {
-                if (amount <= 0) throw new IllegalArgumentException("Withdrawal amount must be positive.");
-                if (availableBalance - amount < minimumBalance)
-                    throw new ArithmeticException("Insufficient balance after maintaining minimum balance.");
-                availableBalance -= amount;
-                System.out.println("Withdrawal of " + amount + " successful.");
-            }
-        } catch (ArithmeticException | IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    public static int totalAccount() {
-        return totalAccountCreated;
-    }
-
-    public static void compare(Account a1, Account a2) {
-        try {
-            if (a1.availableBalance > a2.availableBalance) {
-                System.out.println("Account with higher balance: " + a1.getDetails(a1.accountNumber));
-            } else if (a2.availableBalance > a1.availableBalance) {
-                System.out.println("Account with higher balance: " + a2.getDetails(a2.accountNumber));
-            } else {
-                System.out.println("Both accounts have equal balance.");
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Error: One of the accounts is not initialized.");
-        }
-    }
-
-    // === MAIN METHOD ===
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        // Array of accounts
-        Account[] accounts = new Account[5];
-        int count = 0;
-
-        while (true) {
-            try {
-                System.out.println("\n--- Banking System Menu ---");
-                System.out.println("1. Create Account");
-                System.out.println("2. Update Details");
-                System.out.println("3. Get Details");
-                System.out.println("4. Deposit");
-                System.out.println("5. Withdraw");
-                System.out.println("6. Total Accounts");
-                System.out.println("7. Compare Two Accounts");
-                System.out.println("8. Exit");
-                System.out.print("Enter your choice: ");
-                int choice = sc.nextInt();
-
-                switch (choice) {
-                    case 1:
-                        if (count < accounts.length) {
-                            accounts[count] = new Account();
-                            accounts[count].setDetails(sc);
-                            count++;
-                        } else {
-                            System.out.println("Account limit reached!");
-                        }
-                        break;
-                    case 2:
-                        System.out.print("Enter Account No to update: ");
-                        int uNo = sc.nextInt();
-                        for (Account acc : accounts) {
-                            if (acc != null) acc.updateDetails(uNo, sc);
-                        }
-                        break;
-                    case 3:
-                        System.out.print("Enter Account No to fetch details: ");
-                        int gNo = sc.nextInt();
-                        for (Account acc : accounts) {
-                            if (acc != null) System.out.println(acc.getDetails(gNo));
-                        }
-                        break;
-                    case 4:
-                        System.out.print("Enter Account No: ");
-                        int dNo = sc.nextInt();
-                        System.out.print("Enter amount to deposit: ");
-                        float damt = sc.nextFloat();
-                        for (Account acc : accounts) {
-                            if (acc != null) acc.deposit(dNo, damt);
-                        }
-                        break;
-                    case 5:
-                        System.out.print("Enter Account No: ");
-                        int wNo = sc.nextInt();
-                        System.out.print("Enter amount to withdraw: ");
-                        float wamt = sc.nextFloat();
-                        for (Account acc : accounts) {
-                            if (acc != null) acc.withdraw(wNo, wamt);
-                        }
-                        break;
-                    case 6:
-                        System.out.println("Total Accounts Created: " + Account.totalAccount());
-                        break;
-                    case 7:
-                        System.out.print("Enter first Account index (0-" + (count-1) + "): ");
-                        int i1 = sc.nextInt();
-                        System.out.print("Enter second Account index (0-" + (count-1) + "): ");
-                        int i2 = sc.nextInt();
-                        Account.compare(accounts[i1], accounts[i2]);
-                        break;
-                    case 8:
-                        System.out.println("Exiting...");
-                        sc.close();
-                        System.exit(0);
-                        break;
-                    default:
-                        System.out.println("Invalid choice! Try again.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input type! Enter numbers only.");
-                sc.nextLine(); // clear buffer
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Invalid account index entered.");
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-            }
-        }
+    public String toString() {
+        return name;
     }
 }
+
+class Student {
+    String name;
+    int rollNo;
+    double age;
+    Faculty facultyAdvisor;
+    String grade;
+    String college;
+
+    public Student(Faculty advisor) {
+        this.facultyAdvisor = advisor;
+    }
+
+    public void updateStudentRecord(Scanner sc) {
+        System.out.print("Enter name: ");
+        this.name = sc.nextLine();
+        System.out.print("Enter roll number: ");
+        this.rollNo = Integer.parseInt(sc.nextLine());
+        System.out.print("Enter age: ");
+        this.age = Double.parseDouble(sc.nextLine());
+        System.out.print("Enter grade: ");
+        this.grade = sc.nextLine();
+        System.out.print("Enter college: ");
+        this.college = sc.nextLine();
+    }
+
+    public void getStudentDetails() {
+        System.out.println("Name: " + name);
+        System.out.println("Roll No: " + rollNo);
+        System.out.println("Age: " + age);
+        System.out.println("Grade: " + grade);
+        System.out.println("College: " + college);
+        System.out.println("Advisor: " + getAdvisor());
+    }
+
+    public Faculty getAdvisor() {
+        return facultyAdvisor;
+    }
+}
+
+public class UniversitySystem {
+    static Student[] students = new Student[5];
+    static Faculty[] faculties = new Faculty[2];
+    static int studentCount = 0;
+    static int facultyCount = 0;
+
+    static {
+        for (int i = 0; i < students.length; i++) {
+            students[i] = null;
+        }
+        for (int i = 0; i < faculties.length; i++) {
+            faculties[i] = null;
+        }
+    }
+
+    public static void addFaculty(Scanner sc) {
+        if (facultyCount >= faculties.length) {
+            System.out.println("Faculty limit reached.");
+            return;
+        }
+        System.out.print("Enter faculty name: ");
+        String name = sc.nextLine();
+        faculties[facultyCount++] = new Faculty(name);
+        System.out.println("Faculty added.");
+    }
+
+    public static void deleteFaculty(Scanner sc) {
+        System.out.print("Enter faculty name to delete: ");
+        String name = sc.nextLine();
+        for (int i = 0; i < facultyCount; i++) {
+            if (faculties[i] != null && faculties[i].name.equals(name)) {
+                faculties[i] = null;
+                System.out.println("Faculty deleted.");
+                return;
+            }
+        }
+        System.out.println("Faculty not found.");
+    }
+
+    public static void addStudent(Scanner sc) {
+        if (studentCount >= students.length) {
+            System.out.println("Student limit reached.");
+            return;
+        }
+        System.out.print("Enter advisor name: ");
+        String advisorName = sc.nextLine();
+        Faculty advisor = null;
+        for (Faculty f : faculties) {
+            if (f != null && f.name.equals(advisorName)) {
+                advisor = f;
+                break;
+            }
+        }
+        if (advisor == null) {
+            System.out.println("Advisor not found.");
+            return;
+        }
+        Student s = new Student(advisor);
+        s.updateStudentRecord(sc);
+        students[studentCount++] = s;
+        System.out.println("Student added.");
+    }
+
+    public static void deleteStudent(Scanner sc) {
+        System.out.print("Enter roll number to delete: ");
+        int roll = Integer.parseInt(sc.nextLine());
+        for (int i = 0; i < studentCount; i++) {
+            if (students[i] != null && students[i].rollNo == roll) {
+                students[i] = null;
+                System.out.println("Student deleted.");
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    public static void updateStudentRecord(Scanner sc) {
+        System.out.print("Enter roll number to update: ");
+        int roll = Integer.parseInt(sc.nextLine());
+        for (Student s : students) {
+            if (s != null && s.rollNo == roll) {
+                s.updateStudentRecord(sc);
+                System.out.println("Record updated.");
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    public static void getStudentDetails(Scanner sc) {
+        System.out.print("Enter roll number: ");
+        int roll = Integer.parseInt(sc.nextLine());
+        for (Student s : students) {
+            if (s != null && s.rollNo == roll) {
+                s.getStudentDetails();
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    public static void getStudentMonitor(Scanner sc) {
+        System.out.print("Enter roll number: ");
+        int roll = Integer.parseInt(sc.nextLine());
+        for (Student s : students) {
+            if (s != null && s.rollNo == roll) {
+                System.out.println("Advisor: " + s.getAdvisor());
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        do {
+            System.out.println("\n--- MENU ---");
+            System.out.println("1) Add Student record");
+            System.out.println("2) Delete student");
+            System.out.println("3) Add faculty");
+            System.out.println("4) Delete Faculty");
+            System.out.println("5) Update Student Record");
+            System.out.println("6) Get Student Details");
+            System.out.println("7) Get Advisor Details");
+            System.out.println("8) Exit");
+            System.out.print("Enter your choice: ");
+            choice = Integer.parseInt(sc.nextLine());
+
+            switch (choice) {
+                case 1: addStudent(sc); break;
+                case 2: deleteStudent(sc); break;
+                case 3: addFaculty(sc); break;
+                case 4: deleteFaculty(sc); break;
+                case 5: updateStudentRecord(sc); break;
+                case 6: getStudentDetails(sc); break;
+                case 7: getStudentMonitor(sc); break;
+                case 8: System.out.println("Exiting..."); break;
+                default: System.out.println("Invalid choice.");
+            }
+        } while (choice != 8);
+        sc.close();
+    }
+}
+UniversitySystem.java
+Displaying UniversitySystem.java.
+Assignment 5 ( Monday)
+Gargee Handique
+•
+8 Sept
+10 points
+Due 11 Sept
+Ass 5.pdf
+PDF
+
+Class comments
