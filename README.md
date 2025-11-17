@@ -26,7 +26,7 @@ Susmita Panda
 
 Er Panchanan Nath (TA)
 
-Semal Priya (Student)
+Semal Priya (Student, Profile: https://github.com/semal-1820)
 
 
  
