@@ -1,1 +1,78 @@
+#Solution for ques-1
+
+
+import java.util.Scanner;
+
+public class Addition {
+
+    int add() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter how many numbers you want to add: ");
+        int n = scanner.nextInt();  
+        int sum = 0;
+
+        for (int i = 1; i <= n; i++) {
+            System.out.print("Enter number " + i + ": ");
+            int a = scanner.nextInt();
+            sum += a;
+        }
+
+        return sum;
+    }
+
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    public static void main(String[] args) {   
+        Addition obj = new Addition();
+
+        int result1 = obj.add();
+        System.out.println("Sum (user input): " + result1);
+
+        int result2 = obj.add(5, 10);
+        System.out.println("Sum (5 + 10): " + result2);
+
+        int result3 = obj.add(3, 4, 5);
+        System.out.println("Sum (3 + 4 + 5): " + result3);
+    }
+}
+
+
+
+#Solution for ques 2
+
+
+class Shape {
+    double getArea() {
+        return 0;  
+    }
+}
+
+class Rectangle extends Shape {
+    double length;
+    double width;
+
+    Rectangle(double length, double width) {
+        this.length = length;
+        this.width = width;
+    }
+
+    @Override
+    double getArea() {
+        return length * width;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Rectangle r = new Rectangle(5, 3);
+        System.out.println("Area of Rectangle = " + r.getArea());
+    }
+}
+
 
