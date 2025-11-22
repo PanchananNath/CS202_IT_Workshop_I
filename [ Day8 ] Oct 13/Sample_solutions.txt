@@ -1,1 +1,314 @@
-Solutions are coming sooon............
+#Solution for Shallow Copy
+
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Faculty {
+    String name;
+    int empid;
+
+    Faculty() { }
+
+    Faculty(String name, int empid) {
+        this.name = name;
+        this.empid = empid;
+    }
+
+    Faculty(Faculty f) {
+        this.name = f.name;
+        this.empid = f.empid;
+    }
+
+    public String toString() {
+        return "Faculty Name: " + name + ", Emp Id: " + empid;
+    }
+}
+
+class Student {
+    String name;
+    int rollno;
+    double cgpa;
+    Faculty facadvisor;
+    String branch;
+    String collegeid;
+
+    Student() { }
+
+    Student(Faculty f) {
+        this.facadvisor = f;
+    }
+
+    Student(Student s) { 
+        this.name = s.name;
+        this.rollno = s.rollno;
+        this.cgpa = s.cgpa;
+        this.facadvisor = s.facadvisor;  
+        this.branch = s.branch;
+        this.collegeid = s.collegeid;
+    }
+
+    public void updateStudentRecord(String name, int rollNo, double cgpa, Faculty facultyAdvisor, String branch, String collegeID) {
+        this.name = name;
+        this.rollno = rollNo;
+        this.cgpa = cgpa;
+        this.facadvisor = facultyAdvisor;
+        this.branch = branch;
+        this.collegeid = collegeID;
+    }
+
+    void getStudentDetails() {
+        System.out.println("Name: " + name);
+        System.out.println("Roll no: " + rollno);
+        System.out.println("CGPA: " + cgpa);
+        System.out.println("Branch: " + branch);
+        System.out.println("College ID: " + collegeid);
+        System.out.println("Advisor: " + facadvisor);
+    }
+
+    Faculty getAdvisor() {
+        return facadvisor;
+    }
+}
+
+public class shallowcopy {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        ArrayList<Student> s = new ArrayList<>();
+        ArrayList<Faculty> f = new ArrayList<>();
+
+        System.out.print("Enter number of Faculty members: ");
+        int n = sc.nextInt();
+        sc.nextLine();
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter Faculty Name: ");
+            String fname = sc.nextLine();
+            System.out.print("Enter Faculty Emp Id: ");
+            int fid = sc.nextInt();
+            sc.nextLine();
+            f.add(new Faculty(fname, fid));
+        }
+
+        System.out.print("\nEnter number of Students: ");
+        int m = sc.nextInt();
+        sc.nextLine();
+
+        for (int i = 0; i < m; i++) {
+            System.out.print("Enter Student Name: ");
+            String sname = sc.nextLine();
+            System.out.print("Enter Roll No: ");
+            int roll = sc.nextInt();
+            System.out.print("Enter CGPA: ");
+            double cgpa = sc.nextDouble();
+            sc.nextLine();
+            System.out.print("Enter Branch: ");
+            String branch = sc.nextLine();
+            System.out.print("Enter College ID: ");
+            String cid = sc.nextLine();
+            System.out.print("Enter Faculty index (0 to " + (f.size() - 1) + "): ");
+            int fIndex = sc.nextInt();
+            sc.nextLine();
+
+            Student st = new Student(f.get(fIndex));
+            st.updateStudentRecord(sname, roll, cgpa, f.get(fIndex), branch, cid);
+            s.add(st);
+        }
+
+        System.out.println("\nAll Student Records:");
+        for (int i = 0; i < s.size(); i++) {
+            System.out.println("[" + i + "] " + s.get(i).name);
+        }
+
+        System.out.print("\nEnter the index of the student to create a shallow copy: ");
+        int copyIndex = sc.nextInt();
+        sc.nextLine();
+
+        if (copyIndex < 0 || copyIndex >= s.size()) {
+            System.out.println("Invalid index!");
+            sc.close();
+            return;
+        }
+
+        System.out.println("\nOriginal Student Details:");
+        s.get(copyIndex).getStudentDetails();
+
+        Student shallowCopy = new Student(s.get(copyIndex));
+
+        System.out.println("\nShallow Copy Details (before faculty change):");
+        shallowCopy.getStudentDetails();
+
+        System.out.print("\nEnter new name for the faculty advisor of the original student: ");
+        String newFacName = sc.nextLine();
+
+        s.get(copyIndex).facadvisor.name = newFacName;
+
+        System.out.println("\nAfter Faculty Change:");
+        System.out.println("Original Student Advisor: " + s.get(copyIndex).getAdvisor());
+        System.out.println("Copied Student Advisor: " + shallowCopy.getAdvisor());
+
+        sc.close();
+    }
+}
+
+
+
+
+#Solution for deep copy
+
+
+
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Faculty {
+    String name;
+    int empid;
+
+    Faculty() { }
+
+    Faculty(String name, int empid) {
+        this.name = name;
+        this.empid = empid;
+    }
+
+    Faculty(Faculty f) {
+        this.name = f.name;
+        this.empid = f.empid;
+    }
+
+    public String toString() {
+        return "Faculty Name: " + name + ", Emp Id: " + empid;
+    }
+}
+
+class Student {
+    String name;
+    int rollno;
+    double cgpa;
+    Faculty facadvisor;
+    String branch;
+    String collegeid;
+
+    Student() { }
+
+    Student(Faculty f) {
+        this.facadvisor = f;
+    }
+
+    Student(Student s) {
+        this.name = s.name;
+        this.rollno = s.rollno;
+        this.cgpa = s.cgpa;
+        this.facadvisor = new Faculty(s.facadvisor);
+        this.branch = s.branch;
+        this.collegeid = s.collegeid;
+    }
+
+    public void updateStudentRecord(String name, int rollNo, double cgpa, Faculty facultyAdvisor, String branch, String collegeID) {
+        this.name = name;
+        this.rollno = rollNo;
+        this.cgpa = cgpa;
+        this.facadvisor = facultyAdvisor;
+        this.branch = branch;
+        this.collegeid = collegeID;
+    }
+
+    void getStudentDetails() {
+        System.out.println("Name: " + name);
+        System.out.println("Roll no: " + rollno);
+        System.out.println("CGPA: " + cgpa);
+        System.out.println("Branch: " + branch);
+        System.out.println("College ID: " + collegeid);
+        System.out.println("Advisor: " + facadvisor);
+    }
+
+    Faculty getAdvisor() {
+        return facadvisor;
+    }
+}
+
+public class deepcopy {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        ArrayList<Student> s = new ArrayList<>();
+        ArrayList<Faculty> f = new ArrayList<>();
+
+        System.out.print("Enter number of Faculty members: ");
+        int n = sc.nextInt();
+        sc.nextLine();
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter Faculty Name: ");
+            String fname = sc.nextLine();
+            System.out.print("Enter Faculty Emp Id: ");
+            int fid = sc.nextInt();
+            sc.nextLine();
+            f.add(new Faculty(fname, fid));
+        }
+
+        System.out.print("\nEnter number of Students: ");
+        int m = sc.nextInt();
+        sc.nextLine();
+
+        for (int i = 0; i < m; i++) {
+            System.out.print("Enter Student Name: ");
+            String sname = sc.nextLine();
+            System.out.print("Enter Roll No: ");
+            int roll = sc.nextInt();
+            System.out.print("Enter CGPA: ");
+            double cgpa = sc.nextDouble();
+            sc.nextLine();
+            System.out.print("Enter Branch: ");
+            String branch = sc.nextLine();
+            System.out.print("Enter College ID: ");
+            String cid = sc.nextLine();
+            System.out.print("Enter Faculty index (0 to " + (f.size() - 1) + "): ");
+            int fIndex = sc.nextInt();
+            sc.nextLine();
+
+            Student st = new Student(f.get(fIndex));
+            st.updateStudentRecord(sname, roll, cgpa, f.get(fIndex), branch, cid);
+            s.add(st);
+        }
+
+        System.out.println("\nAll Student Records:");
+        for (int i = 0; i < s.size(); i++) {
+            System.out.println("[" + i + "] " + s.get(i).name);
+        }
+
+        System.out.print("\nEnter the index of the student to create a deep copy: ");
+        int copyIndex = sc.nextInt();
+        sc.nextLine();
+
+        if (copyIndex < 0 || copyIndex >= s.size()) {
+            System.out.println("Invalid index!");
+            sc.close();
+            return;
+        }
+
+        System.out.println("\nOriginal Student Details:");
+        s.get(copyIndex).getStudentDetails();
+
+        Student deepCopy = new Student(s.get(copyIndex));
+
+        System.out.println("\nDeep Copy Details (before faculty change):");
+        deepCopy.getStudentDetails();
+
+        System.out.print("\nEnter new name for the faculty advisor of the original student: ");
+        String newFacName = sc.nextLine();
+
+        s.get(copyIndex).facadvisor.name = newFacName;
+
+        System.out.println("\nAfter Faculty Name Change:");
+        System.out.println("Original Student Advisor: " + s.get(copyIndex).getAdvisor());
+        System.out.println("Copied Student Advisor: " + deepCopy.getAdvisor());
+
+        sc.close();
+    }
+}
+
+
