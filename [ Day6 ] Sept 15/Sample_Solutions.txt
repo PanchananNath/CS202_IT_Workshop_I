@@ -1,1 +1,245 @@
+import java.util.*;
 
+class Person {
+    protected String name;
+    protected int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void getDetails() {
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+    }
+}
+
+class Faculty extends Person {
+    private int id;
+    private List<Student> advisees;
+    private static final int MAX_ADVISEES = 5;
+
+    public Faculty(String name, int age, int id) {
+        super(name, age);
+        this.id = id;
+        this.advisees = new ArrayList<>();
+    }
+
+    public boolean addAdvisee(Student s) {
+        if (advisees.size() < MAX_ADVISEES) {
+            advisees.add(s);
+            return true;
+        }
+        return false;
+    }
+
+    public void getDetails() {
+        System.out.println("Faculty Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("ID: " + id);
+        System.out.println("Advisees:");
+        for (Student s : advisees) {
+            System.out.println("- " + s.getName());
+        }
+    }
+
+    public String toString() {
+        return "Faculty Name: " + name;
+    }
+}
+
+class Student extends Person {
+    private int rollNo;
+    private double cgpa;
+    private Faculty facultyAdvisor;
+    private String branch;
+    private String collegeID;
+
+    public Student(String name, int age, int rollNo, double cgpa, String branch, String collegeID) {
+        super(name, age);
+        this.rollNo = rollNo;
+        this.cgpa = cgpa;
+        this.branch = branch;
+        this.collegeID = collegeID;
+    }
+
+    public void setAdvisor(Faculty advisor) {
+        if (advisor.addAdvisee(this)) {
+            this.facultyAdvisor = advisor;
+        } else {
+            System.out.println("Advisor has reached maximum advisee limit.");
+        }
+    }
+
+    public Faculty getAdvisor() {
+        return facultyAdvisor;
+    }
+
+    public void getDetails() {
+        System.out.println("Student Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Roll No: " + rollNo);
+        System.out.println("CGPA: " + cgpa);
+        System.out.println("Branch: " + branch);
+        System.out.println("College ID: " + collegeID);
+        if (facultyAdvisor != null)
+            System.out.println("Advisor: " + facultyAdvisor.getName());
+        else
+            System.out.println("Advisor: Not assigned");
+    }
+}
+
+public class CollegeSystem{
+    private static List<Student> students = new ArrayList<>();
+    private static List<Faculty> faculties = new ArrayList<>();
+    private static List<Person> persons = new ArrayList<>();
+    private static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("\n--- MENU ---");
+            System.out.println("1) Add Student");
+            System.out.println("2) Delete Student");
+            System.out.println("3) Add Faculty");
+            System.out.println("4) Delete Faculty");
+            System.out.println("5) Add Person");
+            System.out.println("6) Delete Person");
+            System.out.println("7) Get Student Details");
+            System.out.println("8) Get Advisor Details");
+            System.out.println("9) Get Person Details");
+            System.out.println("0) Exit");
+            System.out.print("Choose an option: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1 -> addStudent();
+                case 2 -> deleteStudent();
+                case 3 -> addFaculty();
+                case 4 -> deleteFaculty();
+                case 5 -> addPerson();
+                case 6 -> deletePerson();
+                case 7 -> getStudentDetails();
+                case 8 -> getAdvisorDetails();
+                case 9 -> getPersonDetails();
+                case 0 -> {
+                    System.out.println("Exiting...");
+                    return;
+                }
+                default -> System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    private static void addStudent() {
+        System.out.print("Enter name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter age: ");
+        int age = Integer.parseInt(sc.nextLine());
+        System.out.print("Enter rollNo: ");
+        int rollNo = Integer.parseInt(sc.nextLine());
+        System.out.print("Enter cgpa: ");
+        double cgpa = Double.parseDouble(sc.nextLine());
+        System.out.print("Enter branch: ");
+        String branch = sc.nextLine();
+        System.out.print("Enter collegeID: ");
+        String collegeID = sc.nextLine();
+        Student s = new Student(name, age, rollNo, cgpa, branch, collegeID);
+        students.add(s);
+        persons.add(s);
+        System.out.println("Student added.");
+    }
+
+    private static void deleteStudent() {
+        System.out.print("Enter student name to delete: ");
+        String name = sc.next();
+        students.removeIf(s -> s.getName().equals(name));
+        persons.removeIf(p -> p.getName().equals(name));
+        System.out.println("Student deleted if existed.");
+    }
+
+    private static void addFaculty() {
+        System.out.print("Enter faculty name, age and ID: ");
+        String name = sc.next();
+        int age = sc.nextInt();
+        int id = sc.nextInt();
+        Faculty f = new Faculty(name, age, id);
+        faculties.add(f);
+        persons.add(f);
+        System.out.println("Faculty added.");
+    }
+
+    private static void deleteFaculty() {
+        System.out.print("Enter faculty name to delete: ");
+        String name = sc.next();
+        faculties.removeIf(f -> f.getName().equals(name));
+        persons.removeIf(p -> p.getName().equals(name));
+        System.out.println("Faculty deleted if existed.");
+    }
+
+    private static void addPerson() {
+        System.out.print("Enter person name and age: ");
+        String name = sc.next();
+        int age = sc.nextInt();
+        Person p = new Person(name, age);
+        persons.add(p);
+        System.out.println("Person added.");
+    }
+
+    private static void deletePerson() {
+        System.out.print("Enter person name to delete: ");
+        String name = sc.next();
+        persons.removeIf(p -> p.getName().equals(name));
+        System.out.println("Person deleted if existed.");
+    }
+
+    private static void getStudentDetails() {
+        System.out.print("Enter student name: ");
+        String name = sc.next();
+        for (Student s : students) {
+            if (s.getName().equals(name)) {
+                s.getDetails();
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    private static void getAdvisorDetails() {
+        System.out.print("Enter student name to get advisor: ");
+        String name = sc.next();
+        for (Student s : students) {
+            if (s.getName().equals(name)) {
+                Faculty advisor = s.getAdvisor();
+                if (advisor != null) {
+                    advisor.getDetails();
+                } else {
+                    System.out.println("No advisor assigned.");
+                }
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    private static void getPersonDetails() {
+        System.out.print("Enter person name: ");
+        String name = sc.next();
+        for (Person p : persons) {
+            if (p.getName().equals(name)) {
+                p.getDetails();
+                return;
+            }
+        }
+        System.out.println("Person not found.");
+    }
+}
