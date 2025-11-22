@@ -1,1 +1,55 @@
+import java.io.*;
+import java.util.*;
 
+class FileTask extends Thread {
+    private final File file;
+    private final FileWriter writer;
+
+    FileTask(File file, FileWriter writer) {
+        this.file = file;
+        this.writer = writer;
+    }
+
+    public void run() {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            int lines = 0, words = 0, chars = 0;
+            String line;
+            while ((line = br.readLine()) != null) {
+                lines++;
+                chars += line.length();
+                words += line.trim().isEmpty() ? 0 : line.trim().split("\\s+").length;
+            }
+            synchronized (writer) {
+                writer.write(file.getName() + ": Lines=" + lines + ", Words=" + words + ", Chars=" + chars + "\n");
+                writer.flush();
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading " + file.getName());
+        }
+    }
+}
+
+public class ass11java {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of files: ");
+        int n = sc.nextInt();
+        sc.nextLine();
+        List<FileTask> threads = new ArrayList<>();
+
+        try (FileWriter writer = new FileWriter("summary.txt")) {
+            for (int i = 0; i < n; i++) {
+                System.out.print("Enter file name: ");
+                String name = sc.nextLine();
+                File f = new File(name);
+                FileTask t = new FileTask(f, writer);
+                threads.add(t);
+                t.start();
+            }
+            for (FileTask t : threads) t.join();
+            System.out.println("Summary file is ready.");
+        } catch (Exception e) {
+            System.out.println("Error creating summary file.");
+        }
+    }
+}
