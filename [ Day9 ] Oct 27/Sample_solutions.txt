@@ -1,1 +1,167 @@
+import java.util.*;
+
+class InvalidEmailException extends Exception {
+    public InvalidEmailException(String msg) {
+        super(msg);
+    }
+}
+
+class InvalidPinException extends Exception {
+    public InvalidPinException(String msg) {
+        super(msg);
+    }
+}
+
+class InvalidEmployeeIdException extends Exception {
+    public InvalidEmployeeIdException(String msg) {
+        super(msg);
+    }
+}
+
+class InvalidRollNumberException extends Exception {
+    public InvalidRollNumberException(String msg) {
+        super(msg);
+    }
+}
+
+class person {
+    String firstname, lastname, pan, addresspin;
+
+    person(String firstname, String lastname, String pan, String addresspin) throws InvalidPinException {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.pan = pan;
+        this.addresspin = addresspin;
+        validate();
+    }
+
+    public void validate() throws InvalidPinException {
+        if (!addresspin.matches("\\d{6}")) {
+            throw new InvalidPinException("Invalid PIN Code! Must be a 6-digit number.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + firstname + " " + lastname + ", PAN: " + pan + ", PIN: " + addresspin;
+    }
+}
+
+class student extends person {
+    String emailid, rollno;
+
+    student(String firstname, String lastname, String pan, String addresspin, String emailid, String rollno)
+            throws InvalidPinException, InvalidRollNumberException, InvalidEmailException {
+        super(firstname, lastname, pan, addresspin);
+        this.emailid = emailid;
+        this.rollno = rollno;
+        validates();
+    }
+
+    public void validates() throws InvalidPinException, InvalidRollNumberException, InvalidEmailException {
+        
+        if (!addresspin.matches("\\d{6}")) {
+            throw new InvalidPinException("Invalid PIN Code! Must be a 6-digit number.");
+        }
+
+        if (!emailid.matches("^[A-Za-z0-9._%+-]+@[A-Za-z]+\\.[A-Za-z]{2,}$")) {
+            throw new InvalidEmailException("Invalid Email ID! Format should be something like user@domain.com");
+        }
+
+        if (!rollno.matches("^stud\\d{5}$")) {
+            throw new InvalidRollNumberException("Invalid Roll Number! Must start with 'stud' followed by 5 digits.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Email: " + emailid + ", Roll No: " + rollno;
+    }
+}
+
+class employee extends person {
+    String emailid, employeeid;
+
+    employee(String firstname, String lastname, String pan, String addresspin, String emailid, String employeeid)
+            throws InvalidEmailException, InvalidPinException, InvalidEmployeeIdException {
+        super(firstname, lastname, pan, addresspin);
+        this.emailid = emailid;
+        this.employeeid = employeeid;
+        validatee();
+    }
+
+    public void validatee() throws InvalidEmailException, InvalidEmployeeIdException, InvalidPinException {
+
+        if (!addresspin.matches("\\d{6}")) {
+            throw new InvalidPinException("Invalid PIN Code! Must be a 6-digit number.");
+        }
+        if (!emailid.matches("^[A-Za-z0-9._%+-]+@[A-Za-z]+\\.[A-Za-z]{2,}$")) {
+            throw new InvalidEmailException("Invalid Email ID! Format should be something like user@domain.com");
+        }
+
+        if (!employeeid.matches("^emp\\d{3}$")) {
+            throw new InvalidEmployeeIdException("Invalid Employee ID! Must start with 'emp' followed by 3 digits.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", Email: " + emailid + ", Employee ID: " + employeeid;
+    }
+}
+
+public class eh {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            System.out.println("Enter Person details for Student:");
+            System.out.print("First Name: ");
+            String fn = sc.nextLine();
+            System.out.print("Last Name: ");
+            String ln = sc.nextLine();
+            System.out.print("PAN: ");
+            String pan = sc.nextLine();
+            System.out.print("PIN Code: ");
+            String pin = sc.nextLine();
+            System.out.print("Email ID: ");
+            String email = sc.nextLine();
+            System.out.print("Roll Number: ");
+            String roll = sc.nextLine();
+
+            student st = new student(fn, ln, pan, pin, email, roll);
+            System.out.println("\nStudent record created successfully:");
+            System.out.println(st);
+
+        } catch (InvalidEmailException | InvalidPinException | InvalidRollNumberException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        try {
+            System.out.println("\nEnter Person details for Employee:");
+            System.out.print("First Name: ");
+            String fn = sc.nextLine();
+            System.out.print("Last Name: ");
+            String ln = sc.nextLine();
+            System.out.print("PAN: ");
+            String pan = sc.nextLine();
+            System.out.print("PIN Code: ");
+            String pin = sc.nextLine();
+            System.out.print("Email ID: ");
+            String email = sc.nextLine();
+            System.out.print("Employee ID: ");
+            String empid = sc.nextLine();
+
+            employee emp = new employee(fn, ln, pan, pin, email, empid);
+            System.out.println("\nEmployee record created successfully:");
+            System.out.println(emp);
+
+        } catch (InvalidEmailException | InvalidPinException | InvalidEmployeeIdException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        sc.close();
+    }
+}
+
 
