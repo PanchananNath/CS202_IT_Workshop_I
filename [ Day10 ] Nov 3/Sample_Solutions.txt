@@ -1,1 +1,128 @@
+import java.util.*;
 
+class MovieHall {
+    int availableSeats;
+
+    MovieHall(int seats) {
+        availableSeats = seats;
+    }
+
+   
+    synchronized void bookTicketSync(String name, int tickets) {
+        if (tickets <= availableSeats) {
+            System.out.println(name + " booked " + tickets + " ticket(s).");
+            availableSeats -= tickets;
+            System.out.println("Seats left: " + availableSeats);
+        } else {
+            System.out.println(name + " failed to book " + tickets + " tickets (only " + availableSeats + " left).");
+        }
+    }
+
+
+    void bookTicket(String name, int tickets) {
+        if (tickets <= availableSeats) {
+            System.out.println(name + " booked " + tickets + " ticket(s).");
+            availableSeats -= tickets;
+            System.out.println("Seats left: " + availableSeats);
+        } else {
+            System.out.println(name + " failed to book " + tickets + " tickets (only " + availableSeats + " left).");
+        }
+    }
+
+    
+    synchronized void bookWithWait(String name, int tickets) {
+        while (tickets > availableSeats) {
+            System.out.println(name + " waiting for " + tickets + " tickets (only " + availableSeats + " left).");
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        availableSeats -= tickets;
+        System.out.println(name + " booked " + tickets + " ticket(s). Seats left: " + availableSeats);
+    }
+
+    synchronized void cancelTickets(String name, int tickets) {
+        availableSeats += tickets;
+        System.out.println(name + " cancelled " + tickets + " ticket(s). Seats left: " + availableSeats);
+        notifyAll(); 
+    }
+}
+
+class User extends Thread {
+    MovieHall hall;
+    int tickets;
+    String name;
+    boolean useSync;
+    boolean useWait;
+
+    User(MovieHall hall, String name, int tickets, boolean useSync, boolean useWait) {
+        this.hall = hall;
+        this.name = name;
+        this.tickets = tickets;
+        this.useSync = useSync;
+        this.useWait = useWait;
+    }
+
+    public void run() {
+        if (useWait) {
+            hall.bookWithWait(name, tickets);
+        } else if (useSync) {
+            hall.bookTicketSync(name, tickets);
+        } else {
+            hall.bookTicket(name, tickets);
+        }
+    }
+}
+
+public class BookingSystem {
+    public static void main(String[] args) throws InterruptedException {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter total seats available: ");
+        int totalSeats = sc.nextInt();
+        System.out.print("Enter number of users booking: ");
+        int n = sc.nextInt();
+
+        int[] tickets = new int[n];
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter number of tickets user " + (i + 1) + " wants: ");
+            tickets[i] = sc.nextInt();
+        }
+
+        
+        System.out.println("\n--- Case 1: With Synchronization ---");
+        MovieHall hall1 = new MovieHall(totalSeats);
+        Thread[] t1 = new Thread[n];
+        for (int i = 0; i < n; i++) {
+            t1[i] = new User(hall1, "User" + (i + 1), tickets[i], true, false);
+            t1[i].start();
+        }
+        for (Thread t : t1) t.join();
+
+        System.out.println("\n--- Case 2: Without Synchronization (Race Condition) ---");
+        MovieHall hall2 = new MovieHall(totalSeats);
+        Thread[] t2 = new Thread[n];
+        for (int i = 0; i < n; i++) {
+            t2[i] = new User(hall2, "User" + (i + 1), tickets[i], false, false);
+            t2[i].start();
+        }
+        for (Thread t : t2) t.join();
+
+
+        System.out.println("\n--- Case 3: With wait() & notifyAll() ---");
+        MovieHall hall3 = new MovieHall(totalSeats);
+        Thread[] t3 = new Thread[n];
+        for (int i = 0; i < n; i++) {
+            t3[i] = new User(hall3, "User" + (i + 1), tickets[i], false, true);
+            t3[i].start();
+        }
+
+        
+        Thread.sleep(3000);
+        hall3.cancelTickets("Admin", 5);
+
+        for (Thread t : t3) t.join();
+        sc.close();
+    }
+}
